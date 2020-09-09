@@ -38,8 +38,10 @@ plt.show()
 
 c = []
 for L_, a_ in zip(L, a):
-    c.append(2 * L_ * a_[0])
-print(c)
+    c_ = 2 * L_ * a_[0]
+    dL = 0.0015
+    dc = c_ * np.sqrt((a_[1] / a_[0]) ** 2 + (dL / L_) ** 2)
+    c.append((c_, dc))
 
 R = 8.3144598
 
@@ -55,12 +57,17 @@ f = [3, 5, 5, 5, 5]
 c_teo = []
 for r_, f_, Mm_ in zip(r, f, Mm):
     T = T_C(r_) + 273.15
-    print(T)
+    # print(T)
     c_teo.append(c_id(T, f_, Mm_ / 1000))
-print(c_teo)
 
 
 df = pd.DataFrame(
     {"$K_0$": f_K0, "$K_1$": f_K1, "$K_2$": f_K2, "$K_3$": f_K3, "$K_4$": f_K4}
 )
-print(df.to_latex(index=False, escape=False, caption="CAPTION HERE", label="label"))
+# print(df.to_latex(index=False, escape=False, caption="CAPTION HERE", label="label"))
+
+for (c_, ct, name) in zip(c, c_teo, names):
+    print(rf"{name}: $c_m = {c_[0]} \pm {c_[1]}   c_t = {ct}$")
+
+
+
