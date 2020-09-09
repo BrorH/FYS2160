@@ -28,13 +28,13 @@ a = []
 for i, f in enumerate(freqs):
     a_, _, _, _, da = linregress(range(len(f)), f)
     a.append([a_, da])
-#     plt.plot(f, label=f"{names[i]}, a = {round(a_,3)}")
-# plt.ylabel(r"$\nu$ [Hz]")
-# plt.xlabel("n")
-# plt.grid()
-# plt.legend()
-# plt.savefig("freqs.png")
-# plt.show()
+    plt.plot(f, label=f"{names[i]}, a = {round(a_,3)}")
+plt.ylabel(r"$\nu$ [Hz]")
+plt.xlabel("n")
+plt.grid()
+plt.legend()
+plt.savefig("freqs.png")
+plt.show()
 
 c = []
 for L_, a_ in zip(L, a):
