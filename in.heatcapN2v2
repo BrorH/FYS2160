@@ -1,8 +1,8 @@
 # Define variables
 # Temperature:
-variable T equal 63.15
+variable T equal 200.0
 # Length of sides of cubic box
-variable L equal 22
+variable L equal 200
 # Spring bond (0) or rigid bond (1)
 variable rigidbond equal 0
 
@@ -44,7 +44,7 @@ fix nvt all nvt temp $T $T 1000.0
 thermo          100
 run             1000
 
-# Start heat addition and run to stabilize
+#Start heat addition and run to stabilize
 unfix nvt
 fix nve all nve
 variable eFlux equal 0.001
@@ -52,7 +52,7 @@ fix heat all heat 1 ${eFlux} region box
 run 1000
 
 #Define new thermodynamic output and trajectory dump and start production run
-thermo_style custom step temp epair etotal press ke density
+thermo_style custom step temp epair etotal press vol
 thermo 100
 dump 1 all custom 1000 dump.lammpstrj id x y z vx vy vz
 run 100000

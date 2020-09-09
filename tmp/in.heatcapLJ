@@ -8,7 +8,7 @@ variable rho equal 0.001
 # Pressure:
 variable P equal 0.01
 # Set Pconst=1 for pressure constant, Pconst=0 for volume constant
-variable Pconst equal 1
+variable Pconst equal 0
 
 units lj
 dimension 3
@@ -45,7 +45,7 @@ fix heat all heat 1 ${eFlux} region simbox
 run 1000
 
 #Define new thermodynamic output and trajectory dump and start production run
-thermo_style custom step temp epair etotal press vol
+thermo_style custom step temp epair etotal press
 thermo 100
-dump 1 all custom 100 dump2/dump.lammpstrj.* id x y z vx vy vz
+dump 1 all custom 100 dump.lammpstrj id x y z vx vy vz
 run 100000

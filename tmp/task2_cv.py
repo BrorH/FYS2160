@@ -8,6 +8,7 @@ with open(path, "r") as file:
     data = LLR(file)
     data.readFileToDict()
 
+
 T = data.getProperty("Temp")
 U = data.getProperty("TotEng")
 P = data.getProperty("Press")
