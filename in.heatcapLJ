@@ -47,5 +47,5 @@ run 1000
 #Define new thermodynamic output and trajectory dump and start production run
 thermo_style custom step temp epair etotal press
 thermo 100
-dump 1 all custom 100 dump.lammpstrj id x y z vx vy vz
+dump 1 all custom 100 dump/dump.lammpstrj id x y z vx vy vz
 run 100000
