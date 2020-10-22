@@ -1,0 +1,253 @@
+LAMMPS (20 Nov 2019)
+units real
+atom_style full
+
+read_restart restart.250K
+WARNING: Restart file used different # of processors: 4 vs. 1 (src/read_restart.cpp:742)
+  restoring atom style full from restart
+  orthogonal box = (-22.4613 -23.3424 -22.0074) to (22.4613 23.3424 22.0074)
+  1 by 1 by 1 MPI processor grid
+  restoring pair style lj/cut/coul/long from restart
+  restoring bond style harmonic from restart
+  restoring angle style harmonic from restart
+  8640 atoms
+  5760 bonds
+  2880 angles
+  2 = max # of 1-2 neighbors
+  1 = max # of 1-3 neighbors
+  1 = max # of 1-4 neighbors
+  2 = max # of special neighbors
+  special bonds CPU = 0.00809137 secs
+  read_restart CPU = 0.0234157 secs
+
+include forcefield.SPCE
+# Original model from Berendsen et al, J Phys Chem 91:6269 (1987)
+# Charges and geometry are specified in the "data." file.
+
+mass 1 1.00794 # H
+mass 2 15.9994 # O
+
+pair_style lj/cut/coul/long 10.0
+pair_modify tail yes
+kspace_style pppm 1.0e-5
+
+pair_coeff 1 1 0.00000 0.000
+pair_coeff 1 2 0.00000 0.000
+pair_coeff 2 2 0.15535 3.166
+
+bond_style harmonic
+bond_coeff 1 0.0 1.0
+
+angle_style harmonic
+angle_coeff 1 0.0 109.47
+
+pair_modify tail no
+
+group hydrogen type 1
+5760 atoms in group hydrogen
+group oxygen type 2
+2880 atoms in group oxygen
+
+neighbor 2.0 bin
+neigh_modify every 1 delay 0 check yes
+
+timestep 2.0
+
+fix constrain all shake 1.0e-4 100 0 b 1 a 1
+  0 = # of size 2 clusters
+  0 = # of size 3 clusters
+  0 = # of size 4 clusters
+  2880 = # of frozen angles
+  find clusters CPU = 0.00718077 secs
+
+# Thermodynamic output
+thermo_style custom step temp etotal enthalpy
+thermo 100
+
+variable T equal 250
+
+# Trajectory output
+dump trj all atom 10 ice_$TK.lammpstrj
+dump trj all atom 10 ice_250K.lammpstrj
+
+fix 1 all nvt temp $T $T 200.0
+fix 1 all nvt temp 250 $T 200.0
+fix 1 all nvt temp 250 250 200.0
+
+#fix 2 all deform 1 x scale 10 y scale 10 z scale 10
+
+#fix 1 all npt temp $T $T 100.0 iso 1.0 1.0 200.0
+
+run 10000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:323)
+  G vector (1/distance) = 0.303049
+  grid = 40 40 36
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.00335075
+  estimated relative force accuracy = 1.00907e-05
+  using double precision FFTW3
+  3d grid and FFT values/proc = 94987 57600
+Unused restart file global fix info:
+  fix style: nvt, fix ID: integrate
+Unused restart file peratom fix info:
+  fix style: STORE, fix ID: cO_COMPUTE_STORE
+  fix style: STORE, fix ID: cH_COMPUTE_STORE
+  fix style: STORE, fix ID: A_COMPUTE_STORE
+Neighbor list info ...
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 12
+  ghost atom cutoff = 12
+  binsize = 6, bins = 8 8 8
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut/coul/long, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d/newton
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 37.23 | 37.23 | 37.23 Mbytes
+Step Temp TotEng Enthalpy 
+  100000    249.31724   -32658.986   -33080.676 
+  100100    247.90578    -32622.69   -33088.836 
+  100200    249.10799    -32499.33   -32616.673 
+  100300    249.36286   -32494.117   -32982.082 
+  100400    252.97818   -32489.769   -32968.096 
+  100500    250.16341   -32515.705   -32942.407 
+  100600    248.60511   -32598.618   -32994.141 
+  100700     247.9444   -32639.674   -33256.674 
+  100800    252.17934   -32539.521   -32875.236 
+  100900    248.33561   -32458.279   -32476.747 
+  101000     249.2426   -32459.815   -33062.199 
+  101100    253.48212   -32488.867   -33195.648 
+  101200    248.73273   -32576.694   -33023.726 
+  101300    247.36745   -32615.644   -33037.262 
+  101400     247.7325   -32529.622   -32939.088 
+  101500    249.73525   -32417.861   -32758.351 
+  101600    251.60316     -32415.9   -32748.758 
+  101700    247.75426   -32483.757   -32760.164 
+  101800    246.46484   -32550.017   -33081.639 
+  101900    250.82636   -32554.141    -32967.56 
+  102000    249.74793   -32483.632   -32931.773 
+  102100    253.75313   -32377.496   -32607.725 
+  102200    252.63776   -32408.639   -32777.448 
+  102300    250.98991   -32500.649   -33222.229 
+  102400    252.04295   -32550.207   -33253.793 
+  102500    249.88225   -32556.897   -33178.858 
+  102600    248.23876    -32533.46   -33103.289 
+  102700    255.56245   -32429.798   -33034.624 
+  102800    254.23499   -32356.383   -33085.293 
+  102900     251.3813   -32397.976   -32778.667 
+  103000    249.87251   -32480.043   -32697.309 
+  103100    249.20607   -32523.904   -33170.328 
+  103200    254.58189   -32515.423   -33105.289 
+  103300    250.23638   -32502.201   -32723.296 
+  103400    253.10797   -32471.271   -32990.893 
+  103500    256.02596   -32420.361   -32913.289 
+  103600    251.58871   -32426.164   -33012.965 
+  103700    250.04223   -32524.147   -33090.666 
+  103800    249.57069   -32578.032   -32943.538 
+  103900    245.44666   -32576.706   -33090.485 
+  104000     245.8191   -32512.819   -33035.751 
+  104100    256.37586   -32466.945   -32773.564 
+  104200    251.10136   -32488.901   -32696.822 
+  104300    249.61152   -32516.463   -33040.107 
+  104400    250.20831   -32548.506   -33299.452 
+  104500    248.92921    -32596.51   -33370.578 
+  104600     246.8801   -32629.682   -33063.331 
+  104700    249.33976    -32571.28   -33430.413 
+  104800    247.77948    -32472.79   -33051.732 
+  104900    250.18772   -32436.285   -32720.134 
+  105000    250.32427   -32474.833   -33037.751 
+  105100    248.64597   -32546.104   -33094.644 
+  105200    244.36769   -32677.367   -33140.734 
+  105300    246.87546    -32672.55   -33280.105 
+  105400    250.11815   -32596.328   -33071.944 
+  105500    248.87879   -32526.725   -32891.761 
+  105600    248.46453   -32484.471   -32977.666 
+  105700    250.29845   -32465.856   -32973.039 
+  105800    251.62449   -32467.637   -33080.985 
+  105900    248.63527   -32504.864   -32982.597 
+  106000    250.20233   -32562.153   -33167.364 
+  106100    247.99991   -32576.112   -33066.549 
+  106200    250.73813    -32502.08   -32946.931 
+  106300    251.80067   -32412.372   -32915.319 
+  106400     253.3133    -32398.82    -32971.16 
+  106500    251.48096   -32458.098    -33158.02 
+  106600    249.78021   -32496.075   -32985.005 
+  106700    243.60734    -32510.89   -33023.769 
+  106800    246.34303   -32514.514   -33405.497 
+  106900    251.07461   -32476.064   -33057.036 
+  107000    250.96965   -32405.183   -33050.819 
+  107100    253.39087   -32398.124   -32730.369 
+  107200    250.72604   -32501.478   -33357.011 
+  107300    249.98482   -32555.228   -33103.513 
+  107400    247.00015   -32564.478   -33008.701 
+  107500    246.29259   -32527.714   -33450.572 
+  107600    255.36985   -32397.097   -33178.548 
+  107700    252.14797   -32403.043   -33204.471 
+  107800    248.59067   -32469.733   -33055.454 
+  107900    250.82307   -32537.946   -33220.897 
+  108000    249.33264   -32561.772    -33221.51 
+  108100    246.03864   -32535.873   -33071.347 
+  108200    251.83828   -32388.249   -33112.679 
+  108300    252.16201   -32371.559    -33086.24 
+  108400    250.28318   -32438.306   -32846.517 
+  108500    253.35742   -32518.883   -33321.907 
+  108600    248.22148   -32548.747   -33353.831 
+  108700    249.81108   -32526.354   -32772.926 
+  108800    252.50332   -32482.351   -32908.469 
+  108900    254.98281   -32352.347   -32752.835 
+  109000    253.92132   -32365.119   -32761.248 
+  109100     247.7345   -32461.306   -33160.178 
+  109200    253.56439   -32498.513   -33225.661 
+  109300    249.10243   -32528.908   -33105.756 
+  109400    249.64794   -32549.907   -33071.419 
+  109500    251.22487    -32532.71   -33432.957 
+  109600    251.65028   -32457.819   -32888.957 
+  109700    251.34275   -32418.209   -33204.619 
+  109800    251.27767   -32440.021   -33172.366 
+  109900    253.54475   -32535.935   -32973.317 
+  110000    249.58427   -32613.031   -33229.256 
+Loop time of 831.443 on 1 procs for 10000 steps with 8640 atoms
+
+Performance: 2.078 ns/day, 11.548 hours/ns, 12.027 timesteps/s
+99.9% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 611.92     | 611.92     | 611.92     |   0.0 | 73.60
+Bond    | 0.015475   | 0.015475   | 0.015475   |   0.0 |  0.00
+Kspace  | 126.52     | 126.52     | 126.52     |   0.0 | 15.22
+Neigh   | 68.499     | 68.499     | 68.499     |   0.0 |  8.24
+Comm    | 2.7623     | 2.7623     | 2.7623     |   0.0 |  0.33
+Output  | 10.349     | 10.349     | 10.349     |   0.0 |  1.24
+Modify  | 10.542     | 10.542     | 10.542     |   0.0 |  1.27
+Other   |            | 0.8337     |            |       |  0.10
+
+Nlocal:    8640 ave 8640 max 8640 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    22873 ave 22873 max 22873 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    2.93116e+06 ave 2.93116e+06 max 2.93116e+06 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 2931161
+Ave neighs/atom = 339.255
+Ave special neighs/atom = 2
+Neighbor list builds = 704
+Dangerous builds = 0
+write_restart restart_vap.$TK
+write_restart restart_vap.250K
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:323)
+  G vector (1/distance) = 0.303049
+  grid = 40 40 36
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.00335075
+  estimated relative force accuracy = 1.00907e-05
+  using double precision FFTW3
+  3d grid and FFT values/proc = 94987 57600
+
+Total wall time: 0:13:51

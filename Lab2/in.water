@@ -1,7 +1,7 @@
 units real
 atom_style full
 
-read_restart restart.250K
+read_restart restart_vap_deform.300K
 
 include forcefield.SPCE
 pair_modify tail no
@@ -20,16 +20,16 @@ fix constrain all shake 1.0e-4 100 0 b 1 a 1
 thermo_style custom step temp etotal enthalpy
 thermo 100
 
-variable T equal 300
+variable T equal 400
 
 # Trajectory output
-dump trj all atom 10 ice_$TK.lammpstrj
+dump trj all atom 10 water_$TK.lammpstrj
 
-fix 1 all nvt temp $T $T 200.0
+# fix 1 all nvt temp $T $T 200.0
 
-#fix 2 all deform 1 x scale 10 y scale 10 z scale 10
+# fix 2 all deform 1 x scale 10 y scale 10 z scale 10
 
-#fix 1 all npt temp $T $T 100.0 iso 1.0 1.0 200.0
+fix 1 all npt temp $T $T 100.0 iso 1.0 1.0 200.0
 
 run 20000
 write_restart restart_vap.$TK
